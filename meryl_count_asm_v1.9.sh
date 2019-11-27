@@ -156,7 +156,7 @@ echo "Merge"
 paste "${PREFIX}_${a_name}_${hap_a_name}.counts" "${PREFIX}_${a_name}_${hap_b_name}.counts" > "${PREFIX}_${a_name}.counts"
 paste "${PREFIX}_${b_name}_${hap_a_name}.counts" "${PREFIX}_${b_name}_${hap_b_name}.counts" > "${PREFIX}_${b_name}.counts"
 
-echo -e "Assembly\tContig\t${hap_a_name}\t{$hap_b_name}\tTotal" > "${PREFIX}_hapmers.counts"
+echo -e "Assembly\tContig\t${hap_a_name}\t${hap_b_name}\tTotal" > "${PREFIX}_hapmers.counts"
 cat "${PREFIX}_${a_name}.counts" "${PREFIX}_${b_name}.counts" | \
     awk 'BEGIN{OFS="\t"} {print $1, $2, $5, $NF, $3}' >> "${PREFIX}_hapmers.counts"
 
