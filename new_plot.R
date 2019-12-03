@@ -9,6 +9,7 @@ library("scales")
 draw_blobplot <- function(counts.file,
                           mer.size,
                           out.prefix,
+                          title,
                           ctg.sz.cutoff,
                           w,
                           h,
@@ -44,7 +45,7 @@ draw_blobplot <- function(counts.file,
 
     MAGNIFY.FACTOR = 2
 
-    ggplot(counts.matrix, aes(x=get(hapA), y=get(hapB), color=Assembly, size=length)) +
+    p = ggplot(counts.matrix, aes(x=get(hapA), y=get(hapB), color=Assembly, size=length)) +
         geom_point(shape=16) +
         theme_bw() +
         scale_fill_brewer(palette = "Set1") +     # Set1 -> Red / Blue. Set2 -> Green / Orange.
@@ -52,8 +53,8 @@ draw_blobplot <- function(counts.file,
         scale_x_continuous(labels=comma, limits = c(0, max.display)) +
         scale_y_continuous(labels=comma, limits = c(0, max.display)) +
         scale_radius(labels=comma, range = c(1,20), name = "Contig size") +
-        theme(legend.text = element_text(size=11),
-              legend.position = c(0.80,0.50),  # Modify this if the legend is covering your favorite circle
+        theme(legend.text = element_text(size=20),
+              legend.position = c(0.85,0.75),  # Modify this if the legend is covering your favorite circle
               legend.background = element_rect(size=0.5, linetype="solid", colour ="black"),
               axis.title=element_text(size=14,face="bold"),
               axis.text=element_text(size=12, face="bold")) +
@@ -61,9 +62,12 @@ draw_blobplot <- function(counts.file,
                 colour = guide_legend(override.aes = list(size=5), order = 2)) +
         xlab(custom.x.lab) +
         ylab(custom.y.lab)
+    if ( !is.null(title) & !is.na(title)) {
+        p = p + ggtitle(title) + theme(plot.title = element_text(hjust = 0.5))
+    }
 
     # ggsave(file = paste0(out.prefix, '.png'), height = h, width = w)
-    ggsave(file = paste0(out.prefix, '.pdf'),
+    ggsave(plot = p, file = paste0(out.prefix, '.pdf'),
            height = MAGNIFY.FACTOR * h, width = MAGNIFY.FACTOR * w)
 }
 ################################################################################
@@ -72,6 +76,7 @@ parser <- add_argument(parser, "--file", type="character", help="hapmer count fi
 parser <- add_argument(parser, "--mersize", type="integer", help="mer size used for generating counts file", default=21)
 parser <- add_argument(parser, "--ctgszcutoff", type="integer", help="contig size cutoff (contig longer than this won't be used", default=NULL)
 parser <- add_argument(parser, "--output", type="character", help="prefix to file name of plot", default=NULL)
+parser <- add_argument(parser, "--title", type="character", help="title of plot", default=NULL)
 parser <- add_argument(parser, "--xlab", type="character", help="xlab", default=NULL)
 parser <- add_argument(parser, "--ylab", type="character", help="ylab", default=NULL)
 parser <- add_argument(parser, "--width", type="float", help="width of plot",  default=6.5)
@@ -81,6 +86,7 @@ args   <- parse_args(parser)
 draw_blobplot(counts.file = args$"file",
               mer.size = args$"mersize",
               out.prefix = args$"output",
+              title = args$"title",
               ctg.sz.cutoff = args$"ctgszcutoff",
               custom.x.lab = args$"xlab",
               custom.y.lab = args$"ylab",
