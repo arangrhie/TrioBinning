@@ -4,6 +4,11 @@ Scripts for manually classifying reads and make figures
 ## Dependencies
 * meryl and meryl-lookup from [Meryl v1.4.1](https://github.com/marbl/meryl)
 * hapmer dbs built with Merqury [hapmers.sh](https://github.com/marbl/merqury/blob/master/trio/hapmers.sh)
+* Set env variable for tools and meryl in `~/.bash_profile`
+	```sh
+	export tools=/path/to/tools # where all repos are
+    export PATH=$PATH:$tools/meryl/bin
+	```
 
 ## Assign
 * Assign each read to a haplotype using  `assign.sh`.
